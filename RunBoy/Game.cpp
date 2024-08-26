@@ -17,20 +17,33 @@ Game::~Game( )
 
 
 
-void Game::Initialize( )
+void Game::Initialize()
 {
-	std::cout << "----   HOW TO PLAY   ----" << "\n";
-	std::cout << "Arrow keys to move"<<"\n";
-	std::cout << "Reach the white square to win" << "\n";
-	std::cout << "Enemies can go through walls" << "\n";
+	if (Player::level == 0)
+	{
+		std::cout << "----   HOW TO PLAY   ----" << "\n";
+		std::cout << "Arrow keys to move" << "\n";
+		std::cout << "Pick up all the keys to unlock the exit" << "\n";
+		std::cout << "Reach the square to get to the next level" << "\n";
+		std::cout << "Enemies can go through walls and get faster with each level" << "\n";
+		std::cout << "LEVEL :- 1" << "\n";
+	}
+	else if (Player::level < 9)
+	{
+		std::cout << "LEVEL :- " << Player::level + 1 << "\n";
+	}
+	else {
+
+		std::cout << "LAST LEVEL" << "\n";
+	}
 	
 	Point2f pos(rand() % 300, rand() %100 + 600);
 	player = new Player(pos);
 	
 	for (int i = 0; i < 3; ++i)
-	{
+	{ 
 		Point2f epos(rand() % 300 + 300*(i+1), rand() % 150 + 200*(i+1));
-		enemy[i] = new Enemy(epos);
+		enemy[i] = new Enemy(epos,Player::level);
 	}
 	
 	exit = new Point2f(Point2f(rand() % 300 + 850, rand() % 300));
@@ -75,6 +88,11 @@ void Game::Update( float elapsedSec )
 	{
 		player->Down();
 	}
+
+	if(!player->gamestate())
+	{
+		Initialize();
+	}
 }
 
 void Game::Draw( ) const
@@ -94,6 +112,7 @@ void Game::Draw( ) const
 		player->healthbar();
 		player->exit(exit);
 	}
+	
 	
 	
 }

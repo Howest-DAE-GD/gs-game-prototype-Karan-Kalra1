@@ -2,6 +2,8 @@
 #include "Game.h"
 #include "iostream"
 
+int Player::level = 0;
+
 Player::Player(Point2f pos)
 {   
 	state = game::alive;
@@ -11,9 +13,19 @@ Player::Player(Point2f pos)
 	m_Pos.y = pos.y;
 	player = new Texture("Player.png");
 	health = new Texture("Health.png");
+	for (int i = 0; i <= level; ++i)
+	{
+		key[i] = new Texture("Key.png");
+	}
 	m_speed.x = 3;
 	m_speed.y = 3;
 	hp = 3;
+	hasKey = 0;
+	for (int i = 0; i <= level; ++i)
+	{
+		Kpos[i] = Point2f((rand() % 15 + 2) * 64, (rand() % 10 + 2) * 64);
+	}
+
 	for (int i = 0; i < 50; ++i)
 	{
 		Point2f start((rand() % 18)*64, (rand() % 12)*64);
@@ -46,17 +58,45 @@ Player::Player(Point2f pos)
 void Player::Draw()
 {
 	player->Draw(m_Pos,Rectf(0,0,64,64));
+
+	if (hasKey<=level)
+	{
+		for (int i = 0; i <= level; ++i)
+		{
+			key[i]->Draw(Kpos[i], Rectf(0, 0, 64, 64));
+		}
+	}
 	
 }
 void Player::exit(Point2f* exit)
 {
-	utils::FillRect(Rectf(exit->x, exit->y, 64, 64));
-	if(-64 < exit->x - m_Pos.x && exit->x - m_Pos.x <64&&-64<exit->y-m_Pos.y&&exit->y-m_Pos.y<64)
+	if (hasKey <= level)
 	{
-		
-		state = game::won;
-	
+		glColor3f(1.0f, 0.f, 0.f);
 	}
+	else {
+		glColor3f( 0.f, 1.0f, 0.f);
+	}
+
+	utils::FillRect(Rectf(exit->x, exit->y, 64, 64));
+
+	
+		for (int i = 0; i <= level; ++i)
+		{
+			if (-64 < exit->x - m_Pos.x && exit->x - m_Pos.x < 64 && -64 < exit->y - m_Pos.y && exit->y - m_Pos.y < 64 && hasKey > level)
+			{
+
+				state = game::won;
+
+			}
+			else if (-32 < Kpos[i].x - m_Pos.x && Kpos[i].x - m_Pos.x < 32 && -32 < Kpos[i].y - m_Pos.y && Kpos[i].y - m_Pos.y < 32)
+			{
+				hasKey += 1;
+				Kpos[i].x = -100;
+				Kpos[i].y = -100;
+			}
+		}
+	
 	
 }
 void Player::mapbounds()
@@ -191,15 +231,24 @@ bool Player::gamestate()
 	}
 	if (state == game::lost)
 	{
-		std::cout << " YOU LOST";
+		
+		level = 0;
 		return false;
 	}
 	if (state == game::won)
 	{
-		std::cout << " YOU WON";
+		
+		level += 1;
+
+		if (level == 9)
+		{
+			level = 0;
+		}
+
 		return false;
 	}
 }
+
 
 Player::~Player()
 {

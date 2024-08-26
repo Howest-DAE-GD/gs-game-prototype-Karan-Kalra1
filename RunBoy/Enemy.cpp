@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "Game.h"
 
-Enemy::Enemy(Point2f pos)
+Enemy::Enemy(Point2f pos, int speed)
 {
 	m_EPos.x = pos.x;
 	m_EPos.y = pos.y;
 	enemy = new Texture("Enemy.png");
-	m_espeed = 1.0f;
+	m_espeed = 0.3f + speed/10.0f;
 }
 
 void Enemy::Draw()

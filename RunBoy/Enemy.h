@@ -2,7 +2,7 @@
 class Enemy
 {
 public:
-	Enemy(Point2f);
+	Enemy(Point2f, int);
 	~Enemy();
 	void chase(Point2f);
 	void Draw();
