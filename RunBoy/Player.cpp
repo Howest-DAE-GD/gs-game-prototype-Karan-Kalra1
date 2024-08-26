@@ -191,7 +191,7 @@ void Player::hitcheck(Point2f pos)
 	 
 	
 	{
-		if (-64 < pos.x - m_Pos.x && pos.x - m_Pos.x < 64 && -64 < pos.y - m_Pos.y && pos.y - m_Pos.y < 64)
+		if (-48 < pos.x - m_Pos.x && pos.x - m_Pos.x < 48 && -48 < pos.y - m_Pos.y && pos.y - m_Pos.y < 48)
 		{
 			iframes += 1;
 			if (iframes >= 60)
